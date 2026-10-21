@@ -1,0 +1,41 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import StatusBadge from './StatusBadge.astro';
+
+interface Props { system: CollectionEntry<'systems'>; featured?: boolean }
+const { system, featured = false } = Astro.props;
+const d = system.data;
+---
+
+<a
+  href={`/systems/${system.id}`}
+  class:list={[
+    'panel group relative flex flex-col p-5 sm:p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-amber/70 reveal',
+    featured && 'md:col-span-2',
+  ]}
+>
+  <div class="flex items-center justify-between gap-3">
+    <span class="font-mono text-[0.68rem] text-dim">SYS-0{d.order} · {d.era}</span>
+    <StatusBadge status={d.status} />
+  </div>
+
+  <h3 class="mt-4 text-2xl font-semibold tracking-tight text-fg group-hover:text-amber transition-colors">{d.callsign}</h3>
+  <p class="font-mono text-[0.72rem] text-muted mt-1">{d.kind}</p>
+  <p class="mt-3 text-fg/90 leading-snug">“{d.tagline}”</p>
+  <p class:list={['mt-3 text-sm text-muted leading-relaxed', !featured && 'line-clamp-3']}>{d.summary}</p>
+
+  <dl class="mt-5 grid grid-cols-2 sm:grid-cols-4 gap-px overflow-hidden rounded-lg border border-line bg-line font-mono">
+    {d.telemetry.slice(0, 4).map((t) => (
+      <div class="bg-elev px-3 py-2">
+        <dt class="text-[0.6rem] uppercase tracking-wider text-dim">{t.k}</dt>
+        <dd class="text-sm text-fg truncate">{t.v}</dd>
+      </div>
+    ))}
+  </dl>
+
+  <div class="mt-5 flex flex-wrap gap-1.5">
+    {d.stack.slice(0, featured ? 8 : 5).map((s) => <span class="chip">{s}</span>)}
+  </div>
+
+  <span class="mt-5 pt-4 border-t border-line font-mono text-[0.72rem] text-dim group-hover:text-amber transition-colors">open flight log →</span>
+</a>

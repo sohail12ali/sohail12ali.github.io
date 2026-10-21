@@ -1,0 +1,68 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import StatusBadge from '../../components/StatusBadge.astro';
+
+export async function getStaticPaths() {
+  const systems = (await getCollection('systems')).sort((a, b) => a.data.order - b.data.order);
+  return systems.map((s, i) => ({
+    params: { slug: s.id },
+    props: { system: s, next: systems[(i + 1) % systems.length] },
+  }));
+}
+
+const { system, next } = Astro.props;
+const d = system.data;
+const { Content } = await render(system);
+---
+
+<Base title={d.callsign} description={d.summary}>
+  <article class="mx-auto max-w-3xl px-4 sm:px-6 pt-12 pb-8">
+    <a href="/#systems" class="font-mono text-[0.75rem] text-muted hover:text-amber">← back to fleet</a>
+
+    <header class="mt-8">
+      <div class="flex flex-wrap items-center gap-3 font-mono text-[0.7rem] text-dim">
+        <span>SYS-0{d.order}</span><span>·</span><span>{d.era}</span><span>·</span><StatusBadge status={d.status} />
+      </div>
+      <h1 class="mt-3 text-4xl sm:text-5xl font-semibold tracking-tight">{d.callsign}</h1>
+      <p class="mt-2 font-mono text-sm text-amber">{d.kind}</p>
+      <p class="mt-5 text-xl text-fg/90 leading-snug">“{d.tagline}”</p>
+      <p class="mt-4 text-muted leading-relaxed">{d.summary}</p>
+    </header>
+
+    <dl class="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-px overflow-hidden rounded-xl border border-line bg-line font-mono">
+      {d.telemetry.map((t) => (
+        <div class="bg-elev px-4 py-3">
+          <dt class="text-[0.62rem] uppercase tracking-wider text-dim">{t.k}</dt>
+          <dd class="mt-0.5 text-lg text-fg">{t.v}</dd>
+        </div>
+      ))}
+    </dl>
+
+    <div class="mt-5 flex flex-wrap gap-1.5">{d.stack.map((s) => <span class="chip">{s}</span>)}</div>
+
+    {d.repo && (
+      <a href={d.repo} target="_blank" rel="noopener" class="mt-6 inline-flex items-center gap-2 rounded-lg border border-line-strong px-4 py-2 font-mono text-sm hover:border-amber">
+        view source on GitHub ↗
+      </a>
+    )}
+    {d.status === 'classified' && (
+      <p class="mt-6 rounded-lg border border-red/40 bg-red/5 px-4 py-3 font-mono text-[0.75rem] text-muted">
+        <span class="text-red">CLASSIFIED ·</span> built for a client. Shown here as architecture and outcomes only: no names, no code.
+      </p>
+    )}
+
+    <div class="prose-mc mt-6">
+      <Content />
+    </div>
+
+    <a href={`/systems/${next.id}`} class="panel mt-16 flex items-center justify-between p-5 hover:border-amber/70 transition-colors">
+      <span>
+        <span class="block font-mono text-[0.68rem] text-dim">next system</span>
+        <span class="text-lg font-semibold">{next.data.callsign}</span>
+        <span class="block text-sm text-muted">{next.data.tagline}</span>
+      </span>
+      <span class="font-mono text-amber text-xl">→</span>
+    </a>
+  </article>
+</Base>

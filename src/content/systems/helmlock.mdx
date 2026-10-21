@@ -1,0 +1,29 @@
+---
+callsign: Helmlock
+kind: Harness v3, local-first kernel
+tagline: A 500-line kernel. Everything else is a plugin.
+summary: The next generation of the harness line, designed in public. A small kernel, plugins for everything else, a delivery repo kept separate from a knowledge repo, and files only.
+status: design
+order: 3
+era: "2026"
+stack: [TypeScript, Node 24, Hono, React 19, Vite, Tailwind 4, Zod, pnpm]
+telemetry:
+  - { k: Kernel, v: "~500 LOC" }
+  - { k: Database, v: "none" }
+  - { k: Layers, v: "3" }
+  - { k: CLI, v: "hl" }
+repo: https://github.com/sohail12ali/Helmlock
+---
+
+## Why a v3
+Mothership proved the ideas and showed where the weight was. Too much lived in the core. Helmlock keeps the gates and the traceability and moves everything else out into plugins.
+
+## Architecture
+- **The kernel** covers four things and nothing more: a context tree, a service registry, scoped effects and events.
+- **Plugins** add the rest: the CLI, agent packs, runtimes, voice, remote channels (such as Telegram), ticket workflow and views.
+- **Two repos.** A *delivery* repo holds skills, agents and the console. A *knowledge* repo holds the vault. The machinery can change without touching what you know.
+- **Three layers of configuration:** system → workspace → project. Each layer has its own `CLAUDE.md`, skills and agents.
+- **Files only.** Markdown for prose, TOML for structure, JSONL for history.
+
+## Designing in public
+Helmlock is planned with its own `/plan` skill. It turns blueprints, decisions, flows and mockups into one interactive plan page. The design is the first artifact the system produces.

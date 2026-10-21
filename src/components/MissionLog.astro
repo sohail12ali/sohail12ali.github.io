@@ -1,0 +1,46 @@
+---
+import { missions } from '../data/site';
+import MissionPatch from './MissionPatch.astro';
+---
+
+<section id="missions" class="mx-auto max-w-6xl px-4 sm:px-6 py-16">
+  <p class="label mb-3 reveal">// Mission log</p>
+  <div class="flex flex-wrap items-end justify-between gap-4 mb-10 reveal">
+    <h2 class="text-3xl sm:text-4xl font-semibold tracking-tight">From mobile apps to agent fleets.</h2>
+    <p class="text-muted max-w-md">Every mission built on the one before. Newest first. Open any mission to see its telemetry.</p>
+  </div>
+
+  <ol class="relative border-l border-line ml-7 space-y-6">
+    {missions.map((m) => (
+      <li class="relative pl-10 sm:pl-12 reveal">
+        <div class="absolute -left-7 top-1">
+          <MissionPatch kind={m.patch} active={m.status === 'active'} />
+        </div>
+        <details class="panel group p-5 sm:p-6" open={m.status === 'active'}>
+          <summary class="cursor-pointer list-none">
+            <div class="flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-[0.68rem]">
+              <span class="text-dim">{m.code}</span>
+              <span class="text-muted">{m.years}</span>
+              <span class:list={['flex items-center gap-1.5', m.status === 'active' ? 'text-green' : 'text-dim']}>
+                <span class:list={['led', m.status === 'active' && 'led-pulse']}></span>
+                {m.status === 'active' ? 'ACTIVE' : 'MISSION COMPLETE'}
+              </span>
+              <span class="ml-auto text-dim group-open:rotate-90 transition-transform">▸</span>
+            </div>
+            <h3 class="mt-2 text-xl font-semibold text-fg">{m.name}</h3>
+            {m.role && <p class="font-mono text-[0.72rem] text-amber mt-1">{m.role}</p>}
+            <p class="mt-2 text-muted">{m.story}</p>
+          </summary>
+          <ul class="mt-4 space-y-1.5 text-sm text-fg/85">
+            {m.highlights.map((h) => <li class="flex gap-2"><span class="text-amber">▸</span>{h}</li>)}
+          </ul>
+          {m.telemetry && (
+            <div class="mt-4 flex flex-wrap gap-2 font-mono text-[0.7rem]">
+              {m.telemetry.map((t) => <span class="chip"><span class="text-dim">{t.k}</span> <span class="text-fg">{t.v}</span></span>)}
+            </div>
+          )}
+        </details>
+      </li>
+    ))}
+  </ol>
+</section>

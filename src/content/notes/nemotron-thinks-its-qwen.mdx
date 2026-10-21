@@ -1,0 +1,20 @@
+---
+title: When Nemotron thinks it's Qwen
+summary: I asked a 4B NVIDIA model "tell me about yourself", and it confidently introduced itself as a different company's model.
+date: 2026-03-20
+tags: [local-llms, identity, evals]
+---
+
+NVIDIA's **Nemotron 3 Nano 4B** is a compact hybrid Mamba2-Transformer reasoning model, compressed from Nemotron Nano 9B v2 and built for edge inference. It's a good model.
+
+I asked it the simplest possible question: *"Tell me about yourself."*
+
+It said it was **Qwen**, a model made by a different lab.
+
+## Why it happens
+Compressed and distilled models learn from large amounts of synthetic data, and some of that data is other models talking about themselves. Unless the identity is reinforced, for example in a system prompt or in post-training, the model repeats whichever self-description it saw most often.
+
+## Why it matters
+- **Identity is a behavior, not a fact the model knows.** If your product depends on what the model says it is, test that the same way you test any other output.
+- **Always ship a system prompt**, even with local models. The default persona is whatever the training data happened to contain.
+- This is exactly the kind of check **Tribunal** formalizes: *identity* is one of its six graded dimensions.

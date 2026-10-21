@@ -1,0 +1,25 @@
+---
+title: Approval gates are a feature, not friction
+summary: Why my agent harnesses pause for a human at the right moments, and how to do it without becoming the bottleneck.
+date: 2026-10-01
+tags: [harness, safety, claude-code]
+---
+
+The fastest way to lose trust in a coding agent is to let it do one irreversible thing you didn't expect.
+
+## Gate the effects, not the thinking
+Agents can read, plan and draft as much as they want. The gates go on **effects**: shell commands, writes outside the workspace, deploys. In Mothership, a `PreToolUse` hook holds those calls and the console asks:
+
+- **Allow once**
+- **Allow for this chat**
+- **Deny**
+
+If nobody answers within 300 seconds, the call is denied. Silence is never approval.
+
+## Gate the claims too
+"Done" is also a claim that needs checking. The verifier won't close a ticket until every acceptance criterion has **cited evidence**, such as a test run, a screenshot or a log line.
+
+## Don't become the bottleneck
+- Group decisions so you approve a plan once, not every step.
+- Make the safe path the default, so most work never needs a gate.
+- Use voice. The harness says out loud when it needs you, so you don't have to keep watching it.

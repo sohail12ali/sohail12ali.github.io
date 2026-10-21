@@ -1,0 +1,36 @@
+---
+callsign: MicDrop
+kind: Voice layer for coding agents
+tagline: Talk to your coding agent. Hear it answer.
+summary: A local-first voice layer for Claude Code, Cursor, Codex and Antigravity. You speak, it types into the agent's chat, and it reads the reply back to you. The agent is told nothing about MicDrop.
+status: private
+order: 4
+era: "2026"
+stack: [Rust, Python, Whisper, Piper, Tauri, Agent hooks]
+telemetry:
+  - { k: Agents, v: "4" }
+  - { k: Cloud calls, v: "0" }
+  - { k: Modes, v: "3" }
+  - { k: Prompt changes, v: "none" }
+---
+
+## The idea
+Coding agents already run for minutes at a time. You should be able to walk away, say what you want, and hear back what happened, without teaching the agent anything new.
+
+## One voice turn
+```
+you speak → Whisper transcribes on your CPU
+          → pasted into the agent's chat box + Enter
+          → the agent works and replies as usual
+          → its after-reply hook hands MicDrop the reply
+          → the first sentences are read aloud → the mic opens again
+```
+
+## Key decisions
+- **Invisible to the agent.** MicDrop adds one quiet hook per agent (`Stop` or `afterAgentResponse`). The hook never prints into the chat and never slows the agent down, even when MicDrop isn't running.
+- **Speak the gist, not the diff.** It reads only the first paragraph, with code, paths and markdown removed, and stops at a sentence boundary.
+- **Three ways to listen:** turn by turn (the default, so room noise isn't sent mid-task), hands-free, and push-to-talk.
+- **Voice commands for MicDrop itself** ("stop listening", "repeat that", "say that slower"). They count only as a whole sentence, so they never collide with real requests.
+
+## Packaging
+It's a Rust workspace with a core, a CLI and a tray app. You can install it with `npx mic-drop install`, a one-line script, or an MSI/DMG/AppImage desktop build.

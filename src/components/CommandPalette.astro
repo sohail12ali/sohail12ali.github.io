@@ -1,0 +1,92 @@
+---
+import { getCollection } from 'astro:content';
+import { profile } from '../data/site';
+
+const systems = (await getCollection('systems')).sort((a, b) => a.data.order - b.data.order);
+
+type Cmd = { label: string; hint: string; href?: string; action?: string };
+const commands: Cmd[] = [
+  { label: 'Go to Systems', hint: 'section', href: '/#systems' },
+  { label: 'Go to Pipeline', hint: 'section', href: '/#pipeline' },
+  { label: 'Go to Mission Log', hint: 'section', href: '/#missions' },
+  { label: 'Go to Modules Loaded', hint: 'section', href: '/#modules' },
+  { label: 'Read Notes', hint: 'page', href: '/notes' },
+  { label: 'Open Comms', hint: 'section', href: '/#comms' },
+  ...systems.map((s) => ({ label: `Open ${s.data.callsign}`, hint: s.data.kind, href: `/systems/${s.id}` })),
+  { label: 'GitHub', hint: 'external', href: profile.github },
+  { label: 'LinkedIn', hint: 'external', href: profile.linkedin },
+  ...(profile.email ? [{ label: 'Copy email', hint: profile.email, action: 'copy-email' }] : []),
+  { label: 'Toggle theme', hint: 'light / dark', action: 'theme' },
+];
+---
+
+<dialog id="palette" class="panel p-0 w-[min(560px,calc(100vw-2rem))] mt-[12vh] mx-auto text-fg backdrop:bg-black/60 backdrop:backdrop-blur-sm">
+  <div class="flex items-center gap-2 border-b border-line px-4">
+    <span class="font-mono text-amber">&gt;</span>
+    <input
+      id="palette-input"
+      class="w-full bg-transparent py-3.5 font-mono text-sm outline-none placeholder:text-dim"
+      placeholder="type a command…"
+      autocomplete="off"
+      aria-label="Command"
+    />
+    <kbd class="chip">esc</kbd>
+  </div>
+  <ul id="palette-list" class="max-h-[50vh] overflow-y-auto p-2" role="listbox">
+    {commands.map((c) => (
+      <li>
+        <button
+          class="palette-item w-full flex items-center justify-between gap-4 rounded-lg px-3 py-2 text-left text-sm hover:bg-elev aria-selected:bg-elev aria-selected:text-amber"
+          data-href={c.href}
+          data-action={c.action}
+          role="option"
+        >
+          <span>{c.label}</span>
+          <span class="font-mono text-[0.7rem] text-dim truncate">{c.hint}</span>
+        </button>
+      </li>
+    ))}
+  </ul>
+</dialog>
+
+<script define:vars={{ email: profile.email }}>
+  const dlg = document.getElementById('palette');
+  const input = document.getElementById('palette-input');
+  const items = [...document.querySelectorAll('.palette-item')];
+  let active = 0;
+
+  const visible = () => items.filter((i) => !i.parentElement.hidden);
+  const mark = () => visible().forEach((el, i) => el.setAttribute('aria-selected', String(i === active)));
+  const open = () => { dlg.showModal(); input.value = ''; filter(); input.focus(); };
+
+  function filter() {
+    const q = input.value.toLowerCase().trim();
+    items.forEach((i) => (i.parentElement.hidden = q && !i.textContent.toLowerCase().includes(q)));
+    active = 0;
+    mark();
+  }
+
+  function run(el) {
+    if (!el) return;
+    const { href, action } = el.dataset;
+    dlg.close();
+    if (action === 'theme') document.getElementById('theme-toggle').click();
+    else if (action === 'copy-email') navigator.clipboard?.writeText(email);
+    else if (href?.startsWith('http')) window.open(href, '_blank', 'noopener');
+    else if (href) location.href = href;
+  }
+
+  document.querySelectorAll('[data-palette-open]').forEach((b) => b.addEventListener('click', open));
+  document.addEventListener('keydown', (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); dlg.open ? dlg.close() : open(); }
+  });
+  input.addEventListener('input', filter);
+  input.addEventListener('keydown', (e) => {
+    const v = visible();
+    if (e.key === 'ArrowDown') { e.preventDefault(); active = (active + 1) % v.length; mark(); }
+    if (e.key === 'ArrowUp') { e.preventDefault(); active = (active - 1 + v.length) % v.length; mark(); }
+    if (e.key === 'Enter') { e.preventDefault(); run(v[active]); }
+  });
+  items.forEach((i) => i.addEventListener('click', () => run(i)));
+  dlg.addEventListener('click', (e) => e.target === dlg && dlg.close());
+</script>

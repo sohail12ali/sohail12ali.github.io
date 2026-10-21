@@ -1,0 +1,54 @@
+---
+callsign: Mothership
+kind: Agentic delivery harness
+tagline: Seven agents, one flight deck. Nothing ships without evidence.
+summary: A project-independent harness for Claude Code and Cursor that turns every feature, bug and refactor into a gated, traceable flight plan, with its own console to fly it from.
+status: live
+order: 1
+era: "2026"
+stack: [Claude Code, Cursor, Python, Vanilla JS, Rust, Tauri, Obsidian, TOML]
+telemetry:
+  - { k: Agents, v: "7" }
+  - { k: Stages, v: "6" }
+  - { k: Skills, v: "41" }
+  - { k: Gate timeout, v: "300s" }
+repo: https://github.com/sohail12ali/control-center-workspace
+---
+
+## The problem
+Coding agents are fast and forgetful. They skip requirements, claim things are "done" without proof, and leave no trail you can audit a month later. I wanted agents that work like a disciplined delivery team.
+
+## The flight plan
+Every ticket flies the same six-stage route, and each stage hands off through a gate:
+
+```
+GROUND → CLARIFY → CANONICAL → TEMPLATE → SIMPLIFY → VERIFY → Closed → (deploy)
+analyst  analyst   planner     builder    builder    verifier          deployer
+                    ↑ fixer can be called from any stage ↑
+```
+
+- **harness**, the orchestrator, routes every stage and never writes code itself.
+- **analyst** grounds the request in the real codebase, then clarifies until requirements pass a 10-point freeze gate.
+- **planner** turns frozen requirements into a canonical plan with tasks and estimates.
+- **builder** implements against templates, then a dedicated pass simplifies the result.
+- **verifier** won't close a ticket until every acceptance criterion has cited evidence.
+- **fixer** finds the root cause and applies the smallest patch, at any stage.
+- **deployer** always asks before publishing anything.
+
+## The flight deck
+The **Delivery Console** is a zero-build web app (stdlib Python plus vanilla JS). It's the only thing allowed to write ticket state.
+
+- **Kanban** with a WIP limit, plus investigations, timesheets and analytics.
+- **Live agent chats.** It streams Claude Code sessions as stream-json, so you can steer, queue or interrupt mid-turn and pick the model.
+- **Approval gate.** A PreToolUse hook holds risky tool calls for *Allow once / Allow for this chat / Deny*. If nobody answers, the call is denied.
+- **Voice.** Replies can be read aloud, and it says out loud when it needs you, e.g. *"Permission needed for Bash."*
+- **Vault view.** An Obsidian knowledge vault with a wikilink force-graph of every decision.
+- **Desktop.** A Tauri shell wraps all of it.
+
+## Key decisions
+- **Files over databases.** Markdown for prose, TOML for structure. Humans and agents read the same files.
+- **Traceability is a gate, not a report.** Requirement → task → code → evidence. A gap blocks the ticket.
+- **One harness, two IDEs.** The same agents and skills run in Claude Code and Cursor, with no duplicate definitions.
+
+## What's next
+Mothership is the v2 of the harness line. Its lessons feed **Helmlock**, which keeps the ideas and keeps the kernel small.

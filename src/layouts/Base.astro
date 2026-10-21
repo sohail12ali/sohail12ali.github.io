@@ -1,0 +1,100 @@
+---
+import '../styles/global.css';
+import CommandPalette from '../components/CommandPalette.astro';
+import { profile } from '../data/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title, description = profile.intro } = Astro.props;
+const fullTitle = title ? `${title} · ${profile.name}` : `${profile.name} · ${profile.role}`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL('/og.svg', Astro.site);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="theme-color" content="#07090c" />
+    <script is:inline>
+      document.documentElement.classList.add('js');
+      try {
+        const t = localStorage.getItem('theme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+        else if (matchMedia('(prefers-color-scheme: light)').matches) document.documentElement.dataset.theme = 'light';
+      } catch {}
+    </script>
+  </head>
+  <body class="font-sans">
+    <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 panel px-3 py-2">Skip to content</a>
+
+    <header class="sticky top-0 z-40 border-b border-line/70 backdrop-blur-md" style="background: color-mix(in srgb, var(--bg) 78%, transparent)">
+      <nav class="mx-auto flex max-w-6xl items-center gap-4 px-4 sm:px-6 h-14 font-mono text-[0.78rem]">
+        <a href="/" class="flex items-center gap-2 text-fg hover:text-amber transition-colors">
+          <span class="led led-pulse text-green"></span>
+          <span>{profile.handle}</span>
+        </a>
+        <div class="ml-auto hidden md:flex items-center gap-5 text-muted">
+          <a class="hover:text-fg" href="/#systems">systems</a>
+          <a class="hover:text-fg" href="/#missions">missions</a>
+          <a class="hover:text-fg" href="/#modules">modules</a>
+          <a class="hover:text-fg" href="/notes">notes</a>
+          <a class="hover:text-fg" href="/#comms">comms</a>
+        </div>
+        <button data-palette-open class="ml-auto md:ml-0 chip hover:text-fg hover:border-amber transition-colors" aria-label="Open command palette">
+          <span class="hidden sm:inline">⌘K</span><span class="sm:hidden">menu</span>
+        </button>
+        <button id="theme-toggle" class="chip hover:text-fg hover:border-amber transition-colors" aria-label="Toggle light or dark theme">
+          <span class="theme-dark-label">☾</span>
+        </button>
+      </nav>
+    </header>
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <footer class="mt-24 border-t border-line">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 py-8 flex flex-wrap gap-4 items-center justify-between font-mono text-xs text-dim">
+        <span>© {new Date().getFullYear()} {profile.name} · built with Astro, flown by agents</span>
+        <span class="flex items-center gap-2"><span class="led text-green"></span> all systems nominal</span>
+      </div>
+    </footer>
+
+    <CommandPalette />
+
+    <script>
+      const toggle = document.getElementById('theme-toggle')!;
+      const label = toggle.querySelector('span')!;
+      const sync = () => (label.textContent = document.documentElement.dataset.theme === 'light' ? '☀' : '☾');
+      sync();
+      toggle.addEventListener('click', () => {
+        const next = document.documentElement.dataset.theme === 'light' ? 'dark' : 'light';
+        document.documentElement.dataset.theme = next;
+        try { localStorage.setItem('theme', next); } catch {}
+        sync();
+      });
+
+      const io = new IntersectionObserver(
+        (entries) => entries.forEach((e) => e.isIntersecting && (e.target.classList.add('in'), io.unobserve(e.target))),
+        { rootMargin: '0px 0px -8% 0px' },
+      );
+      document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+    </script>
+  </body>
+</html>

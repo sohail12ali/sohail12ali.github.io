@@ -1,0 +1,30 @@
+---
+callsign: Anchor
+kind: Closed-KB grounding research
+tagline: Eighteen ways to stop an AI from making things up.
+summary: Research and a testbed for a spoken RAG companion in a regulated pharma-onboarding setting, where a hallucinated answer is not an option.
+status: classified
+order: 7
+era: "2026"
+stack: [Python, RAG, NLI, Constrained decoding, Evals]
+telemetry:
+  - { k: Techniques, v: "18" }
+  - { k: Domain, v: "regulated" }
+  - { k: Output, v: "spoken" }
+---
+
+## The question
+How do you build a friendly spoken companion that answers new employees' questions and never says anything that isn't in the approved material?
+
+## What I explored
+I wrote up eighteen techniques, each with its trade-offs, and tested them against a shared eval set. They include:
+
+- **Citation forcing**: no source, no sentence.
+- **An NLI verifier**: every claim is checked for entailment against retrieved passages.
+- **Constrained decoding**: the model can only phrase what retrieval returned.
+- **RAFT-style fine-tuning**, which trains the model to ignore distractor documents.
+- **A semantic cache** of approved answers for the questions everyone asks.
+- **Recursive LMs** for long, layered source material.
+
+## Takeaway
+No single technique is enough. Grounding works as layered defenses, the same way approval gates do in an agent harness.

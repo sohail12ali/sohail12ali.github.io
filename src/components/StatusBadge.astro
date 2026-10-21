@@ -1,0 +1,15 @@
+---
+interface Props { status: 'live' | 'design' | 'private' | 'classified' }
+const { status } = Astro.props;
+const map = {
+  live: { text: 'LIVE · PUBLIC', color: 'text-green', pulse: true },
+  design: { text: 'IN DESIGN', color: 'text-cyan', pulse: true },
+  private: { text: 'PRIVATE BETA', color: 'text-amber', pulse: false },
+  classified: { text: 'CLASSIFIED', color: 'text-red', pulse: false },
+} as const;
+const s = map[status];
+---
+
+<span class:list={['flex items-center gap-1.5 font-mono text-[0.62rem] tracking-wider', s.color]}>
+  <span class:list={['led', s.pulse && 'led-pulse']}></span>{s.text}
+</span>

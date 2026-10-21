@@ -1,0 +1,18 @@
+---
+// Small SVG mission patches, one glyph per career era.
+interface Props { kind: 'origin' | 'foundation' | 'command' | 'ignition' | 'orbit'; active?: boolean }
+const { kind, active = false } = Astro.props;
+const stroke = active ? 'var(--amber)' : 'var(--fg-muted)';
+---
+
+<svg viewBox="0 0 64 64" width="56" height="56" aria-hidden="true" class="shrink-0">
+  <circle cx="32" cy="32" r="29" fill="var(--bg-elev)" stroke={stroke} stroke-width="1.5" />
+  <circle cx="32" cy="32" r="24" fill="none" stroke="var(--line-strong)" stroke-dasharray="2 3" />
+  <g fill="none" stroke={stroke} stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    {kind === 'origin' && (<><rect x="24" y="16" width="16" height="30" rx="3" /><line x1="30" y1="41" x2="34" y2="41" /></>)}
+    {kind === 'foundation' && (<><path d="M18 42h28M22 42V28M32 42V24M42 42V30" /><path d="M16 28l16-10 16 10" /></>)}
+    {kind === 'command' && (<><path d="M32 17l4 9 9 1-7 6 2 9-8-5-8 5 2-9-7-6 9-1z" /></>)}
+    {kind === 'ignition' && (<><path d="M32 15c6 6 8 13 6 20l-6 7-6-7c-2-7 0-14 6-20z" /><path d="M27 42l-4 6M37 42l4 6M32 44v6" /><circle cx="32" cy="29" r="3" /></>)}
+    {kind === 'orbit' && (<><circle cx="32" cy="32" r="6" /><ellipse cx="32" cy="32" rx="17" ry="7" transform="rotate(-25 32 32)" /><circle cx="46" cy="25" r="2.2" fill={stroke} /></>)}
+  </g>
+</svg>

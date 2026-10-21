@@ -1,0 +1,130 @@
+---
+import { pipeline } from '../data/site';
+---
+
+<section id="pipeline" class="mx-auto max-w-6xl px-4 sm:px-6 py-16 reveal">
+  <p class="label mb-3">// Live pipeline</p>
+  <div class="flex flex-wrap items-end justify-between gap-4 mb-8">
+    <h2 class="text-3xl sm:text-4xl font-semibold tracking-tight">Watch a ticket fly through the harness.</h2>
+    <p class="text-muted max-w-md">Seven agents, gated handoffs, and a human at the controls. Hover or tap a stage to see what it does.</p>
+  </div>
+
+  <div class="panel p-4 sm:p-6">
+    <div class="flex items-center justify-between font-mono text-[0.72rem] text-dim mb-5">
+      <span>ticket <span id="pl-ticket" class="text-fg">T-042</span> · <span id="pl-title" class="text-muted">add offline sync to picker app</span></span>
+      <span class="flex items-center gap-2"><span id="pl-led" class="led led-pulse text-green"></span><span id="pl-state">in flight</span></span>
+    </div>
+
+    <ol class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3" id="pl-stages">
+      {pipeline.map((s, i) => (
+        <li>
+          <button
+            class="pl-stage group relative w-full rounded-xl border border-line bg-elev p-3 text-left transition-all duration-300 hover:border-amber focus-visible:border-amber outline-none"
+            data-i={i}
+            data-does={s.does}
+            data-agent={s.agent}
+            data-label={s.label}
+          >
+            <span class="font-mono text-[0.62rem] text-dim">0{i + 1}</span>
+            <span class="block font-mono text-[0.8rem] font-semibold tracking-wider text-fg mt-1">{s.label}</span>
+            <span class="block font-mono text-[0.66rem] text-muted mt-0.5">{s.agent}</span>
+            <span class="pl-bar absolute inset-x-3 bottom-1.5 h-0.5 rounded-full bg-line overflow-hidden"><span class="block h-full w-0 bg-amber transition-[width] duration-700"></span></span>
+          </button>
+        </li>
+      ))}
+    </ol>
+
+    <div class="mt-5 grid gap-3 md:grid-cols-[1fr_auto] items-stretch">
+      <div class="rounded-xl border border-line bg-bg/60 p-4 font-mono text-[0.78rem] min-h-[4.5rem]" aria-live="polite">
+        <span class="text-amber">&gt; </span><span id="pl-readout" class="text-muted">harness: routing ticket to GROUND…</span>
+      </div>
+      <div id="pl-gate" class="hidden rounded-xl border border-amber/60 bg-amber/10 p-4 font-mono text-[0.75rem]">
+        <div class="text-amber mb-2">⚠ deployer wants to publish</div>
+        <div class="flex gap-2">
+          <span id="pl-allow" class="chip !text-green !border-green/50">Allow once</span>
+          <span class="chip">Deny</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const stages = [...document.querySelectorAll<HTMLButtonElement>('.pl-stage')];
+  const readout = document.getElementById('pl-readout')!;
+  const gate = document.getElementById('pl-gate')!;
+  const allow = document.getElementById('pl-allow')!;
+  const state = document.getElementById('pl-state')!;
+  const ticket = document.getElementById('pl-ticket')!;
+  const titleEl = document.getElementById('pl-title')!;
+  const tickets = [
+    ['T-042', 'add offline sync to picker app'],
+    ['T-043', 'fix timezone bug in expiry check'],
+    ['T-044', 'voice read-back for agent replies'],
+  ];
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let hovering = false;
+  let run = 0;
+
+  const say = (t: string) => (readout.textContent = t);
+  const setBar = (el: HTMLElement, pct: number) => ((el.querySelector('.pl-bar > span') as HTMLElement).style.width = pct + '%');
+  const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+  function paint(active: number) {
+    stages.forEach((s, i) => {
+      s.classList.toggle('!border-amber', i === active);
+      s.style.boxShadow = i === active ? '0 0 0 1px var(--amber), 0 0 24px var(--glow)' : '';
+      setBar(s, i < active ? 100 : i === active ? 60 : 0);
+    });
+  }
+
+  async function fly() {
+    const [id, title] = tickets[run++ % tickets.length];
+    ticket.textContent = id;
+    titleEl.textContent = title;
+    state.textContent = 'in flight';
+    for (let i = 0; i < stages.length; i++) {
+      while (hovering) await sleep(200);
+      const s = stages[i].dataset;
+      paint(i);
+      if (s.label === 'DEPLOY') {
+        gate.classList.remove('hidden');
+        state.textContent = 'awaiting human';
+        say('gate: deployer is waiting for approval. Silence = deny.');
+        await sleep(1800);
+        allow.style.background = 'color-mix(in srgb, var(--green) 25%, transparent)';
+        say('human: allow once → publishing.');
+        await sleep(1000);
+        allow.style.background = '';
+        gate.classList.add('hidden');
+      } else {
+        say(`${s.agent} @ ${s.label}: ${s.does}`);
+        await sleep(1500);
+      }
+    }
+    paint(stages.length);
+    state.textContent = 'closed · evidence attached';
+    say('verifier: all acceptance criteria have cited evidence. Ticket closed.');
+    await sleep(2400);
+    fly();
+  }
+
+  stages.forEach((st) => {
+    const show = () => { hovering = true; say(`${st.dataset.agent} @ ${st.dataset.label}: ${st.dataset.does}`); };
+    const hide = () => (hovering = false);
+    st.addEventListener('mouseenter', show);
+    st.addEventListener('focus', show);
+    st.addEventListener('mouseleave', hide);
+    st.addEventListener('blur', hide);
+  });
+
+  if (reduce) {
+    paint(-1);
+    say('Hover or tap a stage to see what each agent does.');
+  } else {
+    const io = new IntersectionObserver((e) => {
+      if (e[0].isIntersecting) { io.disconnect(); fly(); }
+    });
+    io.observe(document.getElementById('pipeline')!);
+  }
+</script>

@@ -1,0 +1,23 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+export async function getStaticPaths() {
+  const notes = await getCollection('notes');
+  return notes.map((n) => ({ params: { slug: n.id }, props: { note: n } }));
+}
+
+const { note } = Astro.props;
+const { Content } = await render(note);
+---
+
+<Base title={note.data.title} description={note.data.summary}>
+  <article class="mx-auto max-w-3xl px-4 sm:px-6 pt-12">
+    <a href="/notes" class="font-mono text-[0.75rem] text-muted hover:text-amber">← all notes</a>
+    <time class="mt-8 block font-mono text-[0.72rem] text-dim">{note.data.date.toISOString().slice(0, 10)}</time>
+    <h1 class="mt-2 text-4xl font-semibold tracking-tight leading-tight">{note.data.title}</h1>
+    <p class="mt-4 text-lg text-muted">{note.data.summary}</p>
+    <div class="mt-3 flex flex-wrap gap-1.5">{note.data.tags.map((t) => <span class="chip">#{t}</span>)}</div>
+    <div class="prose-mc mt-8"><Content /></div>
+  </article>
+</Base>

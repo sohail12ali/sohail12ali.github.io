@@ -1,0 +1,134 @@
+@import "tailwindcss";
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/jetbrains-mono";
+
+/* Dark-first "mission control" palette; light theme swaps the same tokens. */
+:root {
+  color-scheme: dark;
+  --bg: #07090c;
+  --bg-elev: #0d1117;
+  --panel: #10151c;
+  --line: #1e2731;
+  --line-strong: #2c3846;
+  --fg: #e6edf3;
+  --fg-muted: #8b98a7;
+  --fg-dim: #5b6775;
+  --amber: #ffb547;
+  --green: #3ddc97;
+  --cyan: #5cc8ff;
+  --red: #ff6b6b;
+  --grid: rgba(92, 200, 255, 0.045);
+  --glow: rgba(255, 181, 71, 0.18);
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f6f4ee;
+  --bg-elev: #ffffff;
+  --panel: #ffffff;
+  --line: #e3ded2;
+  --line-strong: #cfc8b8;
+  --fg: #14181d;
+  --fg-muted: #4f5966;
+  --fg-dim: #7d8794;
+  --amber: #b86e00;
+  --green: #0f8a5a;
+  --cyan: #0a6fa8;
+  --red: #c2373a;
+  --grid: rgba(10, 111, 168, 0.06);
+  --glow: rgba(184, 110, 0, 0.12);
+}
+
+@theme {
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, "Cascadia Code", Consolas, monospace;
+  --color-bg: var(--bg);
+  --color-elev: var(--bg-elev);
+  --color-panel: var(--panel);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-fg: var(--fg);
+  --color-muted: var(--fg-muted);
+  --color-dim: var(--fg-dim);
+  --color-amber: var(--amber);
+  --color-green: var(--green);
+  --color-cyan: var(--cyan);
+  --color-red: var(--red);
+}
+
+html {
+  background: var(--bg);
+  color: var(--fg);
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background:
+    radial-gradient(1200px 600px at 80% -10%, var(--glow), transparent 60%),
+    linear-gradient(var(--grid) 1px, transparent 1px) 0 0 / 40px 40px,
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0 / 40px 40px,
+    var(--bg);
+  min-height: 100vh;
+}
+
+::selection { background: var(--amber); color: #000; }
+
+.label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--amber);
+}
+
+.panel {
+  background: color-mix(in srgb, var(--panel) 88%, transparent);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  backdrop-filter: blur(6px);
+}
+
+.led {
+  display: inline-block;
+  width: 8px; height: 8px; border-radius: 99px;
+  background: currentColor;
+  box-shadow: 0 0 10px currentColor;
+}
+.led-pulse { animation: pulse 2.4s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: 0.35; } }
+
+.chip {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  padding: 0.15rem 0.5rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 6px;
+  color: var(--fg-muted);
+  white-space: nowrap;
+}
+
+.prose-mc { color: var(--fg-muted); line-height: 1.75; }
+.prose-mc h2 { color: var(--fg); font-size: 1.35rem; font-weight: 650; margin: 2.5rem 0 0.75rem; }
+.prose-mc h2::before { content: "// "; color: var(--amber); font-family: var(--font-mono); }
+.prose-mc h3 { color: var(--fg); font-weight: 600; margin: 1.75rem 0 0.5rem; }
+.prose-mc p { margin: 0 0 1rem; }
+.prose-mc ul { list-style: none; padding: 0; margin: 0 0 1rem; }
+.prose-mc li { padding-left: 1.4rem; position: relative; margin: 0.35rem 0; }
+.prose-mc li::before { content: "▸"; position: absolute; left: 0; color: var(--amber); }
+.prose-mc strong { color: var(--fg); }
+.prose-mc code { font-family: var(--font-mono); font-size: 0.85em; color: var(--cyan); }
+.prose-mc pre { background: var(--bg-elev); border: 1px solid var(--line); border-radius: 10px; padding: 1rem; overflow-x: auto; font-size: 0.82rem; margin: 0 0 1.25rem; }
+.prose-mc pre code { color: var(--fg); }
+.prose-mc a { color: var(--amber); text-decoration: underline; text-underline-offset: 3px; }
+.prose-mc blockquote { border-left: 2px solid var(--amber); padding-left: 1rem; color: var(--fg); font-style: italic; margin: 0 0 1rem; }
+
+/* Only hide when JS is running, so content is never stuck invisible. */
+.js .reveal { opacity: 0; transform: translateY(14px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.js .reveal.in { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .js .reveal { opacity: 1; transform: none; transition: none; }
+  .led-pulse { animation: none; }
+}

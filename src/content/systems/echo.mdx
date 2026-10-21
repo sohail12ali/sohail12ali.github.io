@@ -1,0 +1,26 @@
+---
+callsign: Echo
+kind: Multi-tenant voice-agent engine
+tagline: Speaks only what it can prove.
+summary: A voice-agent engine that can be embedded on any website. A team of specialist agents answers only from verbatim, approved knowledge, and refuses safely when it can't.
+status: classified
+order: 5
+era: "2026"
+stack: [Next.js, TypeScript, Local router model, Whisper, Kokoro, Piper, Evals]
+telemetry:
+  - { k: Agents, v: "5" }
+  - { k: Grounding, v: "closed-world" }
+  - { k: Embed, v: "1 script tag" }
+  - { k: Speech, v: "local" }
+---
+
+## The problem
+A voice agent on a privacy-sensitive product can't improvise. Every sentence it says has to trace back to approved facts.
+
+## What I built
+- **A crew of five specialists:** Guide, Consent, Navigator, Finder and Handoff. A small local router model picks the specialist for each request, with a lexical fallback.
+- **Closed-world grounding.** Answers are spoken only from verbatim, approved knowledge-base entries. If it isn't in the knowledge base, the agent doesn't say it.
+- **A consent classifier that fails safe.** It checks quotes against the source, and when it's unsure, the answer is no.
+- **Multi-tenant from day one.** One engine serves many sites. A `/new-tenant` agent skill sets up the next one.
+- **One script tag** embeds it on any website. A local speech server runs Whisper, Kokoro and Piper.
+- **An eval script per agent**, so a change that makes an agent worse is caught before it ships.

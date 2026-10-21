@@ -1,0 +1,33 @@
+---
+callsign: Tribunal
+kind: System-prompt grading instrument
+tagline: The model judges. The rubric decides.
+summary: An instrument that scores LLM system prompts on six dimensions. LLM judges find the evidence, and a deterministic rubric turns that evidence into the score.
+status: classified
+order: 6
+era: "2026"
+stack: [Python, LLM-as-judge, YAML rubrics, Gold sets]
+telemetry:
+  - { k: Dimensions, v: "6" }
+  - { k: Judge calls, v: "1 / dim" }
+  - { k: Numbers from LLM, v: "0" }
+---
+
+## The problem
+"Is this system prompt safe?" usually gets a vibe-based answer. I wanted a repeatable scorecard.
+
+## The pipeline
+```
+regex rules → LLM judge (one call per dimension) → omission checks
+            → quote verification → dedupe → gates → scorecard
+```
+
+The six dimensions are **truth, steering, identity, privacy, safety and fairness**.
+
+## The core rule
+> The model never picks a number.
+
+LLM judges find evidence and must quote it. Every quote is checked against the source. The score comes only from a YAML rubric applied to verified findings. That makes the results repeatable and explainable, and hard to game.
+
+## Keeping it honest
+A gold set and a corpus of real prompts are kept as fixtures. Each change to the instrument is measured against them.

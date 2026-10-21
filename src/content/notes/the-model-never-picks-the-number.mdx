@@ -1,0 +1,20 @@
+---
+title: The model never picks the number
+summary: Using an LLM as a judge works only when the judge collects evidence and something deterministic does the scoring.
+date: 2026-08-24
+tags: [evals, llm-as-judge]
+---
+
+Ask an LLM to "rate this prompt from 1 to 10" twice and you get two different numbers. Ask it to explain the score and it will justify either one.
+
+## Split the job
+1. **The model finds evidence.** For each dimension it returns findings, and each finding must quote the source.
+2. **Code verifies the evidence.** Quotes that don't appear in the source word for word are dropped.
+3. **A rubric assigns the score.** A YAML file maps verified findings to points. The same evidence always gives the same score.
+
+## What you get
+- **Repeatability.** Score changes come from changes in the evidence, not from randomness in the model.
+- **Explainability.** Every point traces back to a quoted line.
+- **Tunability.** Changing your standards means editing the rubric, not rewriting a prompt and hoping.
+
+LLMs are good at reading. Use them for that, and leave the arithmetic to code.

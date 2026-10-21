@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <pattern id="g" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#5cc8ff" stroke-opacity=".07"/></pattern>
+    <radialGradient id="r" cx="85%" cy="0%" r="70%"><stop offset="0" stop-color="#ffb547" stop-opacity=".25"/><stop offset="1" stop-color="#ffb547" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect width="1200" height="630" fill="#07090c"/><rect width="1200" height="630" fill="url(#g)"/><rect width="1200" height="630" fill="url(#r)"/>
+  <circle cx="92" cy="120" r="8" fill="#3ddc97"/>
+  <text x="114" y="128" font-family="monospace" font-size="24" fill="#ffb547" letter-spacing="4">AI AGENT SYSTEMS ENGINEER</text>
+  <text x="80" y="290" font-family="Inter, sans-serif" font-size="110" font-weight="700" fill="#e6edf3">Sohail Ali<tspan fill="#ffb547">.</tspan></text>
+  <text x="84" y="380" font-family="Inter, sans-serif" font-size="40" fill="#c9d3dd">I build the harnesses that let AI agents</text>
+  <text x="84" y="432" font-family="Inter, sans-serif" font-size="40" fill="#c9d3dd">ship real software, safely.</text>
+  <text x="84" y="550" font-family="monospace" font-size="22" fill="#5b6775">GROUND → CLARIFY → CANONICAL → TEMPLATE → SIMPLIFY → VERIFY → DEPLOY</text>
+</svg>
