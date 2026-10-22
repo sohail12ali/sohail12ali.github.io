@@ -33,4 +33,12 @@ Pushing to `main` deploys to GitHub Pages through `.github/workflows/deploy.yml`
 - **Repo name.** The repo must be named `sohail12ali.github.io` to be served at the root URL.
 - **Pages source.** In *Settings → Pages*, set the source to **GitHub Actions**.
 
+**Push `main` on its own.** If one `git push` moves `main` and another branch to the same commit, GitHub sends a push event for only one of them. The deploy can then silently never run. Use `git push origin main`, not `git push origin main other-branch`. If a deploy is missed, start it by hand with `gh workflow run deploy.yml --ref main`.
+
+The canonical site lives at `https://sohailali.pages.dev` (Cloudflare Pages, project `sohailali`). Redeploy it with:
+
+```bash
+npm run build && npx wrangler pages deploy dist --project-name=sohailali --branch=main
+```
+
 For a custom domain, update `site` in `astro.config.mjs` and add `public/CNAME`.
