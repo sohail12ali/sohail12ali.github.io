@@ -33,7 +33,7 @@ Pushing to `main` deploys to GitHub Pages through `.github/workflows/deploy.yml`
 - **Repo name.** The repo must be named `sohail12ali.github.io` to be served at the root URL.
 - **Pages source.** In *Settings → Pages*, set the source to **GitHub Actions**.
 
-**Push `main` on its own.** If one `git push` moves `main` and another branch to the same commit, GitHub sends a push event for only one of them. The deploy can then silently never run. Use `git push origin main`, not `git push origin main other-branch`. If a deploy is missed, start it by hand with `gh workflow run deploy.yml --ref main`.
+**If a push doesn't deploy.** On 2026-10-21/22, the first three pushes to `main` never started this workflow, even though the workflow file was valid. Then they began working without any config change. Check with `gh run list --branch main --event push`. Start a missed deploy by hand with `gh workflow run deploy.yml --ref main`.
 
 The canonical site lives at `https://sohailali.pages.dev` (Cloudflare Pages, project `sohailali`). Redeploy it with:
 
