@@ -8,7 +8,7 @@ export const profile = {
   location: 'Delhi NCR, India',
   headline: 'I build the harnesses that let AI agents ship real software, safely.',
   intro:
-    'Agent pipelines with approval gates, voice layers for coding agents, and grounding that refuses to hallucinate, built on 8+ years of shipping .NET, mobile and enterprise systems.',
+    'Eight years shipping .NET, mobile and warehouse systems, then the harness that let agents keep doing that work: approval gates, a knowledge vault, and evidence before anything is called done.',
   // TODO(sohail): add your public contact email; the site hides email UI while this is empty.
   email: '',
   github: 'https://github.com/sohail12ali',
@@ -50,10 +50,11 @@ export const missions: Mission[] = [
     years: '2025',
     status: 'complete',
     patch: 'ignition',
-    story: 'Turned a large legacy enterprise platform into one that agents can work on, and taught teams to work with them.',
+    story: 'Turned a large legacy warehouse and commerce platform into one that agents can work on, then used that harness across the floor, invoicing, carriers, inventory and storefront sync.',
     highlights: [
       'Atlas: full-SDLC skill library with a knowledge vault and Graph RAG',
       'Genesis: first agent workspace with a human approval at every phase',
+      'The same flight plan carried handheld migration, SQL invoicing, carrier rules and commerce sync',
       'Ran enablement workshops for cross-functional teams',
     ],
     telemetry: [{ k: 'Skills', v: '88+' }, { k: 'IDEs', v: '3' }],
@@ -120,4 +121,65 @@ export const pipeline = [
   { id: 'simplify', label: 'SIMPLIFY', agent: 'builder', does: 'A dedicated pass that removes anything not needed.' },
   { id: 'verify', label: 'VERIFY', agent: 'verifier', does: 'Every acceptance criterion needs cited evidence before close.' },
   { id: 'deploy', label: 'DEPLOY', agent: 'deployer', does: 'Asks before publishing, every time.' },
+];
+
+// The range of work the harness carried. Domains only: no clients, brands, carriers or ticket ids.
+export type Engagement = {
+  code: string;
+  name: string;
+  stacks: string[];
+  shipped: string;
+  ease: string;
+};
+
+export const engagements: Engagement[] = [
+  {
+    code: 'R-01',
+    name: 'Warehouse floor',
+    stacks: ['.NET MAUI', 'Xamarin', 'WinForms', 'SQL Server'],
+    shipped: 'Handheld and desktop flows moved onto a modern mobile app and API: receiving, putaway, replenishment, paperless picking, and a post-receiving quality worklist.',
+    ease: 'Each repo already had coder, test and publish skills, and a device run had to pass before the ticket could close.',
+  },
+  {
+    code: 'R-02',
+    name: 'Invoicing and packing',
+    stacks: ['SQL Server', 'Stored procedures'],
+    shipped: 'Combining invoices after they exist, parallel printing, bundle counts, gift lines, and the rules that mark work paperless.',
+    ease: 'The schema and its blast radius were written down before any procedure changed.',
+  },
+  {
+    code: 'R-03',
+    name: 'Carriers and dispatch',
+    stacks: ['ASP.NET Core', 'SQL Server'],
+    shipped: 'A carrier API for create, track, void and close-out, plus shipping preferences and address rules that choose the carrier.',
+    ease: 'SQL and the API shared one flight plan, and publish still waited for a person.',
+  },
+  {
+    code: 'R-04',
+    name: 'Inventory truth',
+    stacks: ['SQL Server', 'Dashboards'],
+    shipped: 'Lot and expiry allocation, warehouse-versus-ERP stock gaps, and dashboard queries that were scanning too much.',
+    ease: 'Agents read the real tables first, instead of guessing from the chat.',
+  },
+  {
+    code: 'R-05',
+    name: 'Commerce sync',
+    stacks: ['SQL Server', 'REST'],
+    shipped: 'Order, inventory and customer sync under deadlocks and races, including a hold so a new marketplace order was not invoiced too early.',
+    ease: 'Every acceptance criterion stayed tied to the change and to evidence.',
+  },
+  {
+    code: 'R-06',
+    name: 'Live operations',
+    stacks: ['Windows services', 'WCF', 'Workers', 'E2E tests'],
+    shipped: 'Batch jobs, phone-order services, a live auction console, background sync, in-house health monitoring, and generated end-to-end tests the existing runner discovered on its own.',
+    ease: 'Skills changed with the stack. The route, the vault and the approval gate did not.',
+  },
+];
+
+export const rangeEase = [
+  { k: 'One route', v: 'SQL, mobile, legacy desktop, web and workers share the same stages.' },
+  { k: 'Ground first', v: 'The codebase and the schema are read before anyone forms a plan.' },
+  { k: 'Evidence', v: 'A ticket cannot close until each acceptance criterion has proof.' },
+  { k: 'A person publishes', v: 'Risky calls and every deploy wait for an explicit yes.' },
 ];

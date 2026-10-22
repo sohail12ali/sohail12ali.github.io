@@ -74,6 +74,9 @@ body {
 
 ::selection { background: var(--amber); color: #000; }
 
+/* Keep anchored sections clear of the sticky header. */
+section[id] { scroll-margin-top: 3.5rem; }
+
 .label {
   font-family: var(--font-mono);
   font-size: 0.72rem;
@@ -108,20 +111,25 @@ body {
   white-space: nowrap;
 }
 
-.prose-mc { color: var(--fg-muted); line-height: 1.75; }
-.prose-mc h2 { color: var(--fg); font-size: 1.35rem; font-weight: 650; margin: 2.5rem 0 0.75rem; }
-.prose-mc h2::before { content: "// "; color: var(--amber); font-family: var(--font-mono); }
-.prose-mc h3 { color: var(--fg); font-weight: 600; margin: 1.75rem 0 0.5rem; }
-.prose-mc p { margin: 0 0 1rem; }
-.prose-mc ul { list-style: none; padding: 0; margin: 0 0 1rem; }
-.prose-mc li { padding-left: 1.4rem; position: relative; margin: 0.35rem 0; }
-.prose-mc li::before { content: "▸"; position: absolute; left: 0; color: var(--amber); }
-.prose-mc strong { color: var(--fg); }
-.prose-mc code { font-family: var(--font-mono); font-size: 0.85em; color: var(--cyan); }
-.prose-mc pre { background: var(--bg-elev); border: 1px solid var(--line); border-radius: 10px; padding: 1rem; overflow-x: auto; font-size: 0.82rem; margin: 0 0 1.25rem; }
-.prose-mc pre code { color: var(--fg); }
-.prose-mc a { color: var(--amber); text-decoration: underline; text-underline-offset: 3px; }
-.prose-mc blockquote { border-left: 2px solid var(--amber); padding-left: 1rem; color: var(--fg); font-style: italic; margin: 0 0 1rem; }
+/* Prose for MDX case studies. Lives in the components layer so utilities win,
+   and skips anything inside .not-prose-mc (embedded components). */
+@layer components {
+  .prose-mc { color: var(--fg-muted); line-height: 1.75; }
+  .prose-mc :where(h2):not(.not-prose-mc *) { color: var(--fg); font-size: 1.35rem; font-weight: 650; margin: 2.5rem 0 0.75rem; }
+  .prose-mc :where(h2):not(.not-prose-mc *)::before { content: "// "; color: var(--amber); font-family: var(--font-mono); }
+  .prose-mc :where(h3):not(.not-prose-mc *) { color: var(--fg); font-weight: 600; margin: 1.75rem 0 0.5rem; }
+  .prose-mc :where(p):not(.not-prose-mc *) { margin: 0 0 1rem; }
+  .prose-mc :where(ul):not(.not-prose-mc *) { list-style: none; padding: 0; margin: 0 0 1rem; }
+  .prose-mc :where(li):not(.not-prose-mc *) { padding-left: 1.4rem; position: relative; margin: 0.35rem 0; }
+  .prose-mc :where(li):not(.not-prose-mc *)::before { content: "▸"; position: absolute; left: 0; color: var(--amber); }
+  .prose-mc :where(strong):not(.not-prose-mc *) { color: var(--fg); }
+  .prose-mc :where(code):not(.not-prose-mc *) { font-family: var(--font-mono); font-size: 0.85em; color: var(--cyan); }
+  .prose-mc :where(pre):not(.not-prose-mc *) { background: var(--bg-elev); border: 1px solid var(--line); border-radius: 10px; padding: 1rem; overflow-x: auto; font-size: 0.82rem; margin: 0 0 1.25rem; }
+  .prose-mc :where(pre code):not(.not-prose-mc *) { color: var(--fg); }
+  .prose-mc :where(a):not(.not-prose-mc *) { color: var(--amber); text-decoration: underline; text-underline-offset: 3px; }
+  .prose-mc :where(blockquote):not(.not-prose-mc *) { border-left: 2px solid var(--amber); padding-left: 1rem; color: var(--fg); font-style: italic; margin: 0 0 1rem; }
+  .prose-mc .not-prose-mc { margin: 0 0 1.5rem; }
+}
 
 /* Only hide when JS is running, so content is never stuck invisible. */
 .js .reveal { opacity: 0; transform: translateY(14px); transition: opacity 0.7s ease, transform 0.7s ease; }

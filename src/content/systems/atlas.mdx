@@ -14,6 +14,8 @@ telemetry:
   - { k: Policy, v: "Evidence-first" }
 ---
 
+import Range from '../../components/Range.astro';
+
 ## The problem
 The platform was a large ecosystem built up over years: several repositories, modern .NET MAUI and Blazor next to legacy WinForms and WCF, and a schema too large for anyone to hold in their head. Every change risked side effects nobody could see.
 
@@ -29,5 +31,10 @@ Agents propose; humans approve. Clear safety boundaries decide what an agent may
 
 ## Enablement
 I rolled the harness out through hands-on workshops, so cross-functional teams could use the slash commands and ship features faster, and so it wasn't just a tool one person used.
+
+## What it flew
+The same route carried very different work. Here is the range, by domain.
+
+<Range embedded />
 
 > Details are kept general on purpose. This was client work.

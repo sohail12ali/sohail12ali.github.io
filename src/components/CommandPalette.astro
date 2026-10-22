@@ -7,6 +7,7 @@ const systems = (await getCollection('systems')).sort((a, b) => a.data.order - b
 type Cmd = { label: string; hint: string; href?: string; action?: string };
 const commands: Cmd[] = [
   { label: 'Go to Systems', hint: 'section', href: '/#systems' },
+  { label: 'Go to Range', hint: 'section', href: '/#range' },
   { label: 'Go to Pipeline', hint: 'section', href: '/#pipeline' },
   { label: 'Go to Mission Log', hint: 'section', href: '/#missions' },
   { label: 'Go to Modules Loaded', hint: 'section', href: '/#modules' },

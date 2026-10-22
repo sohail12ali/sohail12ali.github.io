@@ -2,7 +2,15 @@
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 
-const BANNED = /\b([redacted]|[redacted]|[redacted]|[redacted]|[redacted]|[redacted]|[redacted]|[redacted]|[redacted]|[redacted])\b/i;
+const BANNED = new RegExp(
+  [
+    // Employers and clients.
+    String.raw`\b([redacted]|[redacted]|[redacted]|[redacted]|[redacted]|[redacted]|[redacted]|[redacted]|[redacted]|[redacted])\b`,
+    // Carrier and storefront brands that would identify the client.
+    String.raw`\b([redacted]|[redacted]|[redacted]|[redacted]|[redacted]|[redacted])\b`,
+  ].join('|'),
+  'i',
+);
 const SKIP = /\.(pdf|png|jpe?g|webp|woff2?|ico)$/i;
 
 function walk(dir) {

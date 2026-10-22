@@ -5,6 +5,7 @@ import Hero from '../components/Hero.astro';
 import Pipeline from '../components/Pipeline.astro';
 import SystemCard from '../components/SystemCard.astro';
 import MissionLog from '../components/MissionLog.astro';
+import Range from '../components/Range.astro';
 import { modules, profile } from '../data/site';
 
 const systems = (await getCollection('systems')).sort((a, b) => a.data.order - b.data.order);
@@ -30,6 +31,8 @@ const lineage = [
       {systems.map((s, i) => <SystemCard system={s} featured={i === 0} />)}
     </div>
   </section>
+
+  <Range />
 
   <Pipeline />
 

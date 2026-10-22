@@ -19,6 +19,7 @@ npm run audit:names  # fails if an employer/client name leaks into dist/
 | Mission log (career) | `src/data/site.ts` → `missions` |
 | Skill bays | `src/data/site.ts` → `modules` |
 | Pipeline stages | `src/data/site.ts` → `pipeline` |
+| Range (work the harness carried) | `src/data/site.ts` → `engagements`, `rangeEase` |
 | Systems (case studies) | `src/content/systems/*.mdx` |
 | Notes | `src/content/notes/*.mdx` |
 
