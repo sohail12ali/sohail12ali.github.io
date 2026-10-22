@@ -5,3 +5,6 @@ dist/
 
 # Local agent plans (may reference private sources)
 .cursor/plans/
+
+# Private banned-name list for the audit (CI reads it from the AUDIT_BANNED secret)
+.audit-names.local

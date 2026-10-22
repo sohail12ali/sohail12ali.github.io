@@ -26,6 +26,8 @@ jobs:
       - run: npm ci
       - run: npm run build
       - run: npm run audit:names
+        env:
+          AUDIT_BANNED: ${{ secrets.AUDIT_BANNED }}
       - uses: actions/upload-pages-artifact@v5
         with:
           path: dist

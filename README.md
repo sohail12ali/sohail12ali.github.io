@@ -8,7 +8,7 @@ A dark, console-style portfolio. Built with Astro, Tailwind 4 and MDX.
 npm install
 npm run dev          # http://localhost:4321
 npm run build        # static site → dist/
-npm run audit:names  # fails if an employer/client name leaks into dist/
+npm run audit:names  # fails if a banned name leaks into dist/ (needs .audit-names.local)
 ```
 
 ## Edit content (no code needed)
@@ -25,7 +25,15 @@ npm run audit:names  # fails if an employer/client name leaks into dist/
 
 A system's frontmatter sets its callsign, tagline, status (`live`, `design`, `private` or `classified`), telemetry gauges and stack chips.
 
-**House rule:** describe what was built, never where it was built. CI runs `audit:names` before every deploy. To change the banned list, edit `scripts/audit-names.mjs`.
+**House rule:** describe what was built, never where it was built. CI runs `audit:names` before every deploy.
+
+The banned-name list is private and never committed. Locally, it lives in `.audit-names.local`, which is gitignored and has one case-insensitive regex per line. CI reads it from the `AUDIT_BANNED` Actions secret. After editing the local file, sync the secret:
+
+```bash
+gh secret set AUDIT_BANNED < .audit-names.local
+```
+
+With no list, the audit fails rather than passing silently. It reports only file and line, never the matched name, because CI logs on this repo are public.
 
 ## Deploy
 
